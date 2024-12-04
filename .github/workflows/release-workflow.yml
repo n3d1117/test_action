@@ -10,4 +10,14 @@ jobs:
     secrets: inherit
     with:
       pre-release-mode: false
-      custom-pre-release-script: './.github/scripts/pre-release.sh'
+      pre-release-script: |
+        #!/bin/bash
+        set -e
+        echo "$NEW_TAG" > VERSION.txt
+        
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+        
+        git add VERSION.txt
+        git commit -m "chore: update version to $NEW_TAG"
+        git push
