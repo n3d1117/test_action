@@ -9,15 +9,4 @@ jobs:
     uses: ./.github/workflows/make-release.yml
     secrets: inherit
     with:
-      pre-release-mode: false
-      pre-release-script: |
-        #!/bin/bash
-        set -e
-        echo "$NEW_TAG" > VERSION.txt
-        
-        git config user.name github-actions
-        git config user.email github-actions@github.com
-        
-        git add VERSION.txt
-        git commit -m "chore: update version to $NEW_TAG"
-        git push origin HEAD:${{ github.ref }}
+      custom-pre-release-script: './scripts/pre-release.sh'
