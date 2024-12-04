@@ -6,7 +6,7 @@ on:
 
 jobs:
   make-release:
-    uses: ./.github/workflows/make-release.yml
+    uses: n3d1117/test_commons/.github/workflows/make-release.yml@main
     secrets: inherit
     with:
       custom-pre-release-script: './scripts/pre-release.sh'
