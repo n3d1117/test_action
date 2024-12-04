@@ -8,5 +8,5 @@ jobs:
   make-release:
     uses: ./.github/workflows/make-release.yml
     secrets: inherit
-    # with:
-    #   custom-pre-release-script: './scripts/pre-release.sh'
+    with:
+      custom-pre-release-script: './scripts/pre-release.sh'
