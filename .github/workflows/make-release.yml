@@ -45,7 +45,6 @@ jobs:
           NEW_TAG: ${{ steps.changelog.outputs.tag }}
         run: |
           if [ -f "${{ inputs.custom-pre-release-script }}" ]; then
-            chmod +x "${{ inputs.custom-pre-release-script }}"
             "${{ inputs.custom-pre-release-script }}"
           else
             echo "Custom pre-release script not found"
