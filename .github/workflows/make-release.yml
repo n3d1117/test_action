@@ -26,7 +26,7 @@ jobs:
 
       - name: Conventional Changelog Action
         id: changelog
-        uses: ShapeGames/conventional-changelog-action@releases/v3
+        uses: TriPSs/conventional-changelog-action@v6.0.0
         with:
           github-token: ${{ github.token }}
           skip-version-file: 'true'
@@ -34,7 +34,6 @@ jobs:
           skip-commit: 'true'
           tag-prefix: ''
           pre-release: "${{ inputs.pre-release-mode }}"
-          pre-release-bumps-minor: 'true'
 
       - name: Stop if needed
         if: ${{ steps.changelog.outputs.changelog == null }}
