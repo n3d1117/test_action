@@ -10,4 +10,4 @@ jobs:
     secrets: inherit
     with:
       pre-release-mode: false
-      custom-pre-release-script: './scripts/pre-release.sh'
+      custom-pre-release-script: './.github/scripts/pre-release.sh'
