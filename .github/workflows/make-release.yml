@@ -8,8 +8,8 @@ on:
         required: false
         type: boolean
       
-      pre-release-script:
-        description: "Inline bash script to run before release"
+      custom-pre-release-script:
+        description: "Path to a custom pre-release script in the repository"
         required: false
         type: string
 
@@ -39,12 +39,18 @@ jobs:
         if: ${{ steps.changelog.outputs.changelog == null }}
         run: exit 1
 
-      - name: Run Inline Pre-Release Script
-        if: inputs.pre-release-script != ''
+      - name: Run Custom Pre-Release Script
+        if: inputs.custom-pre-release-script != ''
         env:
           NEW_TAG: ${{ steps.changelog.outputs.tag }}
         run: |
-          bash -c "${{ inputs.pre-release-script }}"
+          if [ -f "${{ inputs.custom-pre-release-script }}" ]; then
+            chmod +x "${{ inputs.custom-pre-release-script }}"
+            "${{ inputs.custom-pre-release-script }}"
+          else
+            echo "Custom pre-release script not found"
+            exit 1
+          fi
 
       - name: Create Release
         uses: actions/create-release@v1
