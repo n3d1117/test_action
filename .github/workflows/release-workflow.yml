@@ -7,9 +7,7 @@ on:
 jobs:
   pr-workflow:
     name: Release Workflow
-    uses: n3d1117/test_action/.github/workflows/make-release.yml@main
+    uses: ShapeGames/commons-ios/.github/workflows/common-release-workflow.yml@main
     secrets: inherit
     with:
-      before-release: |
-        echo "Running a custom task before creating the release."
-        echo "The release tag is: ${{ steps.changelog.outputs.tag }}"
+      custom-pre-release-script: './scripts/pre-release.sh'
