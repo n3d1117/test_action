@@ -7,6 +7,10 @@ on:
         description: "Whether or not to tag versions as pre-release versions"
         required: false
         type: boolean
+      before-release:
+        description: "Custom script to run before the Create Release step"
+        required: false
+        type: string
 
 jobs:
 
@@ -33,6 +37,13 @@ jobs:
       - name: Stop if needed
         if: ${{ steps.changelog.outputs.changelog == null }}
         run: exit 1
+
+      - name: Injectable Step
+        if: ${{ inputs.before-release != '' }}
+        run: |
+          echo "Running before release script..."
+          echo "Tag: ${{ steps.changelog.outputs.tag }}"
+          ${{ inputs.before-release }}
         
       - name: Create Release
         uses: actions/create-release@v1
