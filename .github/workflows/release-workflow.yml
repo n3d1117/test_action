@@ -20,4 +20,4 @@ jobs:
         
         git add VERSION.txt
         git commit -m "chore: update version to $NEW_TAG"
-        git push
+        git push origin HEAD:${{ github.ref }}
