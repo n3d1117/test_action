@@ -5,9 +5,9 @@ on:
     branches: [ main, master ]
 
 jobs:
-  pr-workflow:
-    name: Release Workflow
-    uses: ShapeGames/commons-ios/.github/workflows/common-release-workflow.yml@main
+  make-release:
+    uses: ./.github/workflows/make-release.yml
     secrets: inherit
     with:
+      pre-release-mode: false
       custom-pre-release-script: './scripts/pre-release.sh'
