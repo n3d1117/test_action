@@ -1,8 +1,7 @@
 #!/bin/bash
 set -e
 
-# Example: Update a specific file with the new tag
-echo "$NEW_TAG" > VERSION.txt
+sed -i '' "s/\"[^\"]*\"/\"$NEW_VERSION\"/g" Version.swift
 
 # Configure git
 git config user.name github-actions
