@@ -7,13 +7,13 @@ on:
         description: "Whether or not to tag versions as pre-release versions"
         required: false
         type: boolean
-      before-release:
-        description: "Custom script to run before the Create Release step"
+      
+      custom-pre-release-script:
+        description: "Path to a custom pre-release script in the repository"
         required: false
         type: string
 
 jobs:
-
   changelog-and-release:
     runs-on: ubuntu-latest
     timeout-minutes: 3
@@ -22,10 +22,11 @@ jobs:
         uses: actions/checkout@v2.3.4
         with:
           token: ${{ github.token }}
+          fetch-depth: 0
 
       - name: Conventional Changelog Action
         id: changelog
-        uses: TriPSs/conventional-changelog-action@v6.0.0
+        uses: ShapeGames/conventional-changelog-action@releases/v3
         with:
           github-token: ${{ github.token }}
           skip-version-file: 'true'
@@ -33,18 +34,25 @@ jobs:
           skip-commit: 'true'
           tag-prefix: ''
           pre-release: "${{ inputs.pre-release-mode }}"
-          
+          pre-release-bumps-minor: 'true'
+
       - name: Stop if needed
         if: ${{ steps.changelog.outputs.changelog == null }}
         run: exit 1
 
-      - name: Injectable Step
-        if: ${{ inputs.before-release != '' }}
+      - name: Run Custom Pre-Release Script
+        if: inputs.custom-pre-release-script != ''
+        env:
+          NEW_TAG: ${{ steps.changelog.outputs.tag }}
         run: |
-          echo "Running before release script..."
-          echo "Tag: ${{ steps.changelog.outputs.tag }}"
-          ${{ inputs.before-release }}
-        
+          if [ -f "${{ inputs.custom-pre-release-script }}" ]; then
+            chmod +x "${{ inputs.custom-pre-release-script }}"
+            "${{ inputs.custom-pre-release-script }}"
+          else
+            echo "Custom pre-release script not found"
+            exit 1
+          fi
+
       - name: Create Release
         uses: actions/create-release@v1
         env:
@@ -54,3 +62,15 @@ jobs:
           release_name: ${{ steps.changelog.outputs.tag }}
           body: ${{ steps.changelog.outputs.clean_changelog }}
           prerelease: ${{ inputs.pre-release-mode }}
+
+      - name: Post to Slack
+        run: |
+          curl -X POST ${{ secrets.CHANGELOG_SLACK_WEBHOOK_URL }} \
+          --data-binary @- << EOF
+          {
+              "text": "*${{ github.event.repository.name }}*\n_Author: ${GITHUB_ACTOR}_\n\n${{ steps.changelog.outputs.changelog }}",
+              "username": "Changelog",
+              "icon_emoji": ":unicorn_face:",
+              "channel": "#changelog-ios"
+          }
+          EOF
