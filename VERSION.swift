@@ -8,5 +8,5 @@
 import GamesFoundation
 
 extension SDK {
-    public static let version = Version(string: "1.0.15")!
+    public static let version = Version(string: "1.0.17")!
 }
