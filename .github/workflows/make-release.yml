@@ -55,15 +55,3 @@ jobs:
           release_name: ${{ steps.changelog.outputs.tag }}
           body: ${{ steps.changelog.outputs.clean_changelog }}
           prerelease: ${{ inputs.pre-release-mode }}
-
-      - name: Post to Slack
-        run: |
-          curl -X POST ${{ secrets.CHANGELOG_SLACK_WEBHOOK_URL }} \
-          --data-binary @- << EOF
-          {
-              "text": "*${{ github.event.repository.name }}*\n_Author: ${GITHUB_ACTOR}_\n\n${{ steps.changelog.outputs.changelog }}",
-              "username": "Changelog",
-              "icon_emoji": ":unicorn_face:",
-              "channel": "#changelog-ios"
-          }
-          EOF
