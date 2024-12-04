@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-sed -i '' "s/\"[^\"]*\"/\"$NEW_VERSION\"/g" VERSION.swift
+sed -i '' "s/Version(string: \".*\")/Version(string: \"$NEW_TAG\")/" VERSION.swift
 
 # Configure git
 git config user.name github-actions
