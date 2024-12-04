@@ -1,0 +1,11 @@
+name: Commons
+
+on:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  pr-workflow:
+    name: Release Workflow
+    uses: n3d1117/test_action/.github/workflows/make-release.yml@main
+    secrets: inherit
