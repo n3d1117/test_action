@@ -8,5 +8,3 @@ jobs:
   make-release:
     uses: n3d1117/test_commons/.github/workflows/common-release-workflow.yml@main
     secrets: inherit
-    with:
-      before-release-script: scripts/update-sdk-version.sh
